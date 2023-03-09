@@ -82,10 +82,40 @@ function updateSdk() {
 }
 
 function updateWin32Sdk() {
-    //shell.env["PATH"] = 'C:\\ncs\\toolchains\\v2.3.0\\bin;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin\\Scripts;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin' // 设置对应SDK的west和python等路径
-    shell.config.execPath = shell.which('node').toString();
-    shell.cd("c:\\ncs\\v2.3.0"); // 进入Zephyr workspace
-    shell.exec("west update");
+    const PATH = 'C:\\ncs\\toolchains\\v2.3.0\\bin;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin\\Scripts;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin' // 设置对应SDK的west和python等路径
+    const westYmlPath = path.join(__dirname, 'ncs_extend_file', 'west.yml');
+    const sdkWestYmlPath = "C:\\ncs\\toolchains\\v2.3.0\\nrf\\west.yml";
+    log.info("updateMacSdk");
+    log.info("westYmlPath", westYmlPath);
+    log.info("sdkWestYmlPath", sdkWestYmlPath);
+
+    fs.copyFileSync(westYmlPath, sdkWestYmlPath); 
+    log.info("copy west.yml success");
+
+    log.info("run west update");
+
+    //let westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update")
+    let westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update", {
+        env: {
+            PATH,
+        }
+    }, (error, stdout, stderr) => {
+        log.info("run west shell error", error);
+        log.info("run west shell stderr", stderr);
+    });
+
+    westShell.stdout.on('data', function(data) {
+        log.info("data", data);
+        stdouts.updateSDK += data;
+        mainWindow.webContents.send('stdout-change', stdouts);
+    });
+
+    westShell.stdout.on('end', function(data) {
+        stdouts.updateSDK += "west update end";
+        log.info("end", data);
+        mainWindow.webContents.send('stdout-change', stdouts);
+        states.isSDKupdateing = false;
+    });
 }
 
 function updateMacSdk() {
