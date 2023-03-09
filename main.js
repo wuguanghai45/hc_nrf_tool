@@ -5,6 +5,7 @@ const fs = require("fs");
 const log = require('electron-log');
 const { exec } = require('child_process')
 
+
 log.initialize({ preload: true });
 
 let states = {
