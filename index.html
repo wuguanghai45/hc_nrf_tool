@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>HC Robotics Embedded SDK Utility</title>
+  </head>
+  <body>
+    <div>
+        <button id="update_vscode" type="button">更新VSCode插件</button>
+    </div>
+    <div id="update_vscode_stdout"></div>
+    <div>
+        <button id="update_sdk" type="button">更新SDK组件</button>
+    </div>
+    <div id="update_sdk_stdout"></div>
+    <script src="./renderer.js"></script>
+  </body>
+</html>
+
