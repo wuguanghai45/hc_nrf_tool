@@ -132,23 +132,22 @@ function updateLinuxSdk() {
 
 
 function updateVscode() {
-  let extensionPath;
-  switch(os.type()) {
-    case 'Windows_NT':
-        extensionPath = path.join(os.homedir(), '.vscode', 'extensions', 'nordic-semiconductor.nrf-connect-2023.2.56-win32-x64', 'dist', 'extension.js');
-        break;
-    case 'Darwin':
-        extensionPath = path.join(os.homedir(), '.vscode', 'extensions', 'nordic-semiconductor.nrf-connect-2023.2.56-darwin-arm64', 'dist', 'extension.js');
-        break;
-    case 'Linux':
-        extensionPath = path.join(os.homedir(), '.vscode', 'extensions', 'nordic-semiconductor.nrf-connect-2023.2.56-darwin-arm64', 'dist', 'extension.js');
-        break;
-    default:
-        log.info('Unknown OS type');
-  }
+  let nordicExtensionPath;
+  let extensionDirPath = path.join(os.homedir(), '.vscode', 'extensions');
+  
+  // find nordic-semiconductor.nrf-connect file
+    let files = fs.readdirSync(extensionDirPath);
+    for(let i = 0; i < files.length; i++) {
+        let file = files[i];
+        if(file.indexOf("nordic-semiconductor.nrf-connect-20") != -1) {
+            nordicExtensionPath = path.join(extensionDirPath, file, 'dist', 'extension.js');
+            break;
+        }
+    }
+
 
   const nordicExtensionJsPath = path.join(__dirname, 'vscode_extend_file', 'extension.js');
-  fs.copyFileSync(nordicExtensionJsPath, extensionPath);
+  fs.copyFileSync(nordicExtensionJsPath, nordicExtensionPath);
   states.isUpdateVscode = false;
   stdouts.updateVscode = "update success";
   mainWindow.webContents.send('stdout-change', stdouts); 
