@@ -174,7 +174,7 @@ function updateVscode() {
             break;
         }
     }
-
+  log.info("nordicExtensionPath", nordicExtensionPath);
 
   const nordicExtensionJsPath = path.join(__dirname, 'vscode_extend_file', 'extension.js');
   fs.copyFileSync(nordicExtensionJsPath, nordicExtensionPath);
