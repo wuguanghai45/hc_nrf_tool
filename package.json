@@ -9,7 +9,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish"
   },
-  "author": "",
+  "author": "wuguanghai45",
   "license": "ISC",
   "devDependencies": {
     "@electron-forge/cli": "^6.0.5",
