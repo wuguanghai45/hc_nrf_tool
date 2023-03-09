@@ -25,6 +25,7 @@
     "electron-log": "^5.0.0-beta.16",
     "electron-squirrel-startup": "^1.0.0",
     "shelljs": "^0.8.5",
+    "update-electron-app": "^2.0.1",
     "vscode": "^1.1.37"
   }
 }

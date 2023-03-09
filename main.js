@@ -1,11 +1,11 @@
-const {app, BrowserWindow, ipcMain} = require('electron')
-const path = require('path')
+const {app, BrowserWindow, ipcMain} = require('electron');
+const path = require('path');
 const os = require('os');
 const fs = require("fs");
 const log = require('electron-log');
-const { exec } = require('child_process')
+const { exec } = require('child_process');
 
-
+require('update-electron-app')();
 log.initialize({ preload: true });
 
 let states = {
