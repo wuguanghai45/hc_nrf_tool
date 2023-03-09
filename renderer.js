@@ -10,7 +10,6 @@ update_sdk.addEventListener('click', () => {
 });
 
 window.electronAPI.handleStdout((event, value) => {
-    console.log(value, 111);
     document.getElementById('update_sdk_stdout').innerText = value.updateSDK;
     document.getElementById('update_vscode_stdout').innerText = value.updateVscode;
 })
