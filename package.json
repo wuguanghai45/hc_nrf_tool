@@ -9,6 +9,10 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish"
   },
+  "repository": {
+	  "type": "git",
+	  "url": "https://github.com/wuguanghai45/hc_zephyr_tool.git"
+  },
   "author": "wuguanghai45",
   "license": "ISC",
   "devDependencies": {

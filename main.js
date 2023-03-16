@@ -1,12 +1,26 @@
-const {app, BrowserWindow, ipcMain} = require('electron');
+const {app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const os = require('os');
 const fs = require("fs");
 const log = require('electron-log');
 const { exec } = require('child_process');
 
+
 require('update-electron-app')();
 log.initialize({ preload: true });
+
+const appVersion = app.getVersion();
+log.info("current_version", appVersion);
+
+const iconPath = path.join(__dirname,'images', 'icon.png');
+
+app.setName("HC TOOL");
+app.setAboutPanelOptions({
+    applicationName: 'HC TOOL',
+    applicationVersion: '1.0.0',
+    version: '1.0.0',
+    iconPath,
+})
 
 let states = {
     isSDKupdateing: false,
@@ -24,7 +38,8 @@ function createWindow () {
    mainWindow = new BrowserWindow({
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
-    }
+    },
+    title: "HC TOOL",
   })
 
   ipcMain.on('update-sdk', () => {
@@ -45,16 +60,21 @@ function createWindow () {
     }
   })
 
-
+  mainWindow.setIcon(iconPath);
   mainWindow.loadFile('index.html')
 }
 
 app.whenReady().then(() => {
-  createWindow()
-  
-  app.on('activate', function () {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
+    if (process.platform === 'darwin') {
+        app.dock.setIcon(iconPath)
+    }
+
+    app.on('activate', function () {
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow();
+        }
+    });
+
 })
 
 app.on('window-all-closed', function () {
