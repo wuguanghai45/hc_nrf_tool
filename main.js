@@ -1,3 +1,4 @@
+const package = require('./package.json');
 const {app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const os = require('os');
@@ -6,21 +7,20 @@ const log = require('electron-log');
 const { exec } = require('child_process');
 
 
-require('update-electron-app')();
+// require('update-electron-app')();
 log.initialize({ preload: true });
 
 const appVersion = app.getVersion();
 log.info("current_version", appVersion);
 
-const iconPath = path.join(__dirname,'images', 'icon.png');
+const iconPath = "images/icon.png";
+
+
+app.dock.setIcon(iconPath);
+// app.setIcon(iconPath);
 
 app.setName("HC TOOL");
-app.setAboutPanelOptions({
-    applicationName: 'HC TOOL',
-    applicationVersion: '1.0.0',
-    version: '1.0.0',
-    iconPath,
-})
+
 
 let states = {
     isSDKupdateing: false,
@@ -39,6 +39,7 @@ function createWindow () {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     },
+    icon: iconPath,
     title: "HC TOOL",
   })
 
@@ -60,7 +61,6 @@ function createWindow () {
     }
   })
 
-  mainWindow.setIcon(iconPath);
   mainWindow.loadFile('index.html')
 }
 
@@ -75,6 +75,14 @@ app.whenReady().then(() => {
         }
     });
 
+    app.setAboutPanelOptions({
+        applicationName: 'HC TOOL',
+        applicationVersion: package.version,
+        version: package.version,
+        iconPath: iconPath,
+    });
+
+    app.showAboutPanel();
 })
 
 app.on('window-all-closed', function () {

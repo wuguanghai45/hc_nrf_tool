@@ -1,5 +1,8 @@
 module.exports = {
-  packagerConfig: {},
+  packagerConfig: {
+    "name": "hc_zephyr_tool",
+    "icon": "images/icon.ico",
+  },
   rebuildConfig: {},
   makers: [
     {
