@@ -13,7 +13,7 @@ log.initialize({ preload: true });
 const appVersion = app.getVersion();
 log.info("current_version", appVersion);
 
-const iconPath = "images/icon.png";
+const iconPath = path.join(__dirname,'images', 'icon.png');
 
 
 app.dock.setIcon(iconPath);
@@ -81,8 +81,6 @@ app.whenReady().then(() => {
         version: package.version,
         iconPath: iconPath,
     });
-
-    app.showAboutPanel();
 })
 
 app.on('window-all-closed', function () {
