@@ -4,6 +4,7 @@ const path = require('path');
 const os = require('os');
 const fs = require("fs");
 const log = require('electron-log');
+const axios = require('axios');
 const { exec } = require('child_process');
 
 
@@ -108,20 +109,30 @@ function updateSdk() {
     }
 }
 
-function updateWin32Sdk() {
-    const PATH = 'C:\\ncs\\toolchains\\v2.3.0\\bin;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin\\Scripts;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin' // 设置对应SDK的west和python等路径
-    const westYmlPath = path.join(__dirname, 'ncs_extend_file', 'west.yml');
+function downloadFile(url, path) {
+    return new Promise((resolve)=> {
+        axios.get(url, { responseType: 'stream' })
+            .then(response => {
+                const outputStream = fs.createWriteStream(path);
+                response.data.pipe(outputStream);
+                outputStream.on('finish', () => {
+                    console.log('File downloaded successfully');
+                    resolve()
+                });
+            })
+            .catch(error => {
+                console.error('Error downloading file:', error);
+            });
+    })
+}
+
+const updateWin32Sdk = async() => {
+    const url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/west.yml';
     const sdkWestYmlPath = "C:\\ncs\\toolchains\\v2.3.0\\nrf\\west.yml";
-    log.info("updateMacSdk");
-    log.info("westYmlPath", westYmlPath);
-    log.info("sdkWestYmlPath", sdkWestYmlPath);
+    await downloadFile(url, sdkWestYmlPath); 
 
-    fs.copyFileSync(westYmlPath, sdkWestYmlPath); 
-    log.info("copy west.yml success");
+    const PATH = 'C:\\ncs\\toolchains\\v2.3.0\\bin;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin\\Scripts;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin' // 设置对应SDK的west和python等路径
 
-    log.info("run west update");
-
-    //let westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update")
     let westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update", {
         env: {
             PATH,
@@ -145,18 +156,10 @@ function updateWin32Sdk() {
     });
 }
 
-function updateMacSdk() {
-    const westYmlPath = path.join(__dirname, 'ncs_extend_file', 'west.yml');
+const updateMacSdk = async() => {
+    const url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/west.yml';
     const sdkWestYmlPath = "/opt/nordic/ncs/v2.3.0/nrf/west.yml";
-    log.info("updateMacSdk");
-    log.info("westYmlPath", westYmlPath);
-    log.info("sdkWestYmlPath", sdkWestYmlPath);
-
-    fs.copyFileSync(westYmlPath, sdkWestYmlPath); 
-    log.info("copy west.yml success");
-
-    log.info("run west update");
-
+    await downloadFile(url, sdkWestYmlPath);
     //let westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update")
     let westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update", {
         env: {
@@ -167,20 +170,18 @@ function updateMacSdk() {
         log.info("run west shell stderr", stderr);
     });
 
-    westShell.stdout.on('data', function(data) {
+    westShell.stdout.on('data', function (data) {
         log.info("data", data);
         stdouts.updateSDK += data;
         mainWindow.webContents.send('stdout-change', stdouts);
     });
 
-    westShell.stdout.on('end', function(data) {
+    westShell.stdout.on('end', function (data) {
         stdouts.updateSDK += "west update end";
         log.info("end", data);
         mainWindow.webContents.send('stdout-change', stdouts);
         states.isSDKupdateing = false;
     });
-
-
 }
 
 function updateLinuxSdk() {
@@ -188,8 +189,10 @@ function updateLinuxSdk() {
 }
 
 
-function updateVscode() {
+const updateVscode = async() => {
+  let url = "http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/vscode_extend_file/extension.js";
   let nordicExtensionPath;
+
   let extensionDirPath = path.join(os.homedir(), '.vscode', 'extensions');
   
   // find nordic-semiconductor.nrf-connect file
@@ -203,8 +206,7 @@ function updateVscode() {
     }
   log.info("nordicExtensionPath", nordicExtensionPath);
 
-  const nordicExtensionJsPath = path.join(__dirname, 'vscode_extend_file', 'extension.js');
-  fs.copyFileSync(nordicExtensionJsPath, nordicExtensionPath);
+  await downloadFile(url, nordicExtensionPath);
   states.isUpdateVscode = false;
   stdouts.updateVscode = "update success";
   mainWindow.webContents.send('stdout-change', stdouts); 

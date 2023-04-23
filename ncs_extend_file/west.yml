@@ -34,7 +34,7 @@ manifest:
     - name: ant-nrfconnect
       url-base: https://github.com/ant-nrfconnect
     - name: remote2
-      url-base: git@10.1.20.100:hc_zephyr
+      url-base: http://10.1.20.100/hc_zephyr
 
   # If not otherwise specified, the projects below should be obtained
   # from the ncs remote.
@@ -189,17 +189,22 @@ manifest:
       remote: remote2
       repo-path: canopen_stack
       path: modules/hc/canopen_stack
-      revision: f72579309cb76d78b93788d061120a72a3f54296
+      revision: main
     - name: node402
       remote: remote2
       repo-path: node402
       path: modules/hc/node402
-      revision: 3438c09a868c916b76f837ce6e16dddc7c1375df
+      revision: main
     - name: dual402
       remote: remote2
       repo-path: dual402
       path: modules/hc/dual402
-      revision: 87b9a4102830520dbacb80f7721f36a5aa7ae645
+      revision: main
+    - name: sml
+      remote: remote2
+      repo-path: sml
+      path: modules/hc/sml
+      revision: main
 
 
   # West-related configuration for the nrf repository.
