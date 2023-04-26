@@ -69,11 +69,7 @@ app.whenReady().then(() => {
         app.dock.setIcon(iconPath)
     }
 
-    app.on('activate', function () {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
-        }
-    });
+    createWindow();
 
     app.setAboutPanelOptions({
         applicationName: 'HC TOOL',
