@@ -127,12 +127,12 @@ function downloadFile(url, path) {
 
 const updateWin32Sdk = async() => {
     const url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/west.yml';
-    const sdkWestYmlPath = "C:\\ncs\\toolchains\\v2.3.0\\nrf\\west.yml";
+    const sdkWestYmlPath = "C:\\ncs\\v2.3.0\\nrf\\west.yml";
     await downloadFile(url, sdkWestYmlPath); 
 
     const PATH = 'C:\\ncs\\toolchains\\v2.3.0\\bin;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin\\Scripts;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin' // 设置对应SDK的west和python等路径
 
-    let westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update", {
+    let westShell = exec("cd /ncs/v2.3.0 && west update", {
         env: {
             PATH,
         }
