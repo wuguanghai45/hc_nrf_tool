@@ -17,7 +17,6 @@ log.info("current_version", appVersion);
 const iconPath = path.join(__dirname,'images', 'icon.png');
 
 
-app.dock.setIcon(iconPath);
 // app.setIcon(iconPath);
 
 app.setName("HC TOOL");
