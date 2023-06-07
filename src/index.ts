@@ -1,20 +1,22 @@
-const package = require('./package.json');
-const {app, BrowserWindow, ipcMain } = require('electron');
-const path = require('path');
-const os = require('os');
-const fs = require("fs");
-const log = require('electron-log');
-const axios = require('axios');
-const { exec } = require('child_process');
-
+import packageJson from ".././package.json";
+import { app, BrowserWindow, ipcMain } from "electron";
+import path from "path";
+import os from "os";
+import fs from "fs";
+import log from "electron-log";
+import axios from "axios";
+import { exec } from "child_process";
 
 // require('update-electron-app')();
-log.initialize({ preload: true });
+// log.initialize({ preload: true });
 
 const appVersion = app.getVersion();
 log.info("current_version", appVersion);
 
-const iconPath = path.join(__dirname,'images', 'icon.png');
+declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+
+const iconPath = "images/icon.png";
 
 
 // app.setIcon(iconPath);
@@ -22,7 +24,7 @@ const iconPath = path.join(__dirname,'images', 'icon.png');
 app.setName("HC TOOL");
 
 
-let states = {
+const states = {
     isSDKupdateing: false,
     isUpdateVscode: false,
 }
@@ -32,16 +34,20 @@ const stdouts = {
     updateVscode: "",
 }
 
-let mainWindow;
+let mainWindow: any;
 
 function createWindow () {
-   mainWindow = new BrowserWindow({
+
+  mainWindow = new BrowserWindow({
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
     icon: iconPath,
     title: "HC TOOL",
-  })
+  });
+
+  // and load the index.html of the app.
+  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   ipcMain.on('update-sdk', () => {
     log.info("update-sdk");
@@ -61,7 +67,9 @@ function createWindow () {
     }
   })
 
-  mainWindow.loadFile('index.html')
+  ipcMain.on('change-is-ncs', (arg) => {
+    console.log(arg, 333);
+  });
 }
 
 app.whenReady().then(() => {
@@ -73,8 +81,8 @@ app.whenReady().then(() => {
 
     app.setAboutPanelOptions({
         applicationName: 'HC TOOL',
-        applicationVersion: package.version,
-        version: package.version,
+        applicationVersion: packageJson.version,
+        version: packageJson.version,
         iconPath: iconPath,
     });
 })
@@ -98,13 +106,13 @@ function updateSdk() {
         updateMacSdk();
     }else if(platform == "linux"){
         //linux
-        updateLinuxSdk("update SDK linux");
+        updateLinuxSdk();
     }else{
         log.info("other");
     }
 }
 
-function downloadFile(url, path) {
+function downloadFile(url: any, path: any) {
     return new Promise((resolve)=> {
         axios.get(url, { responseType: 'stream' })
             .then(response => {
@@ -112,7 +120,7 @@ function downloadFile(url, path) {
                 response.data.pipe(outputStream);
                 outputStream.on('finish', () => {
                     console.log('File downloaded successfully');
-                    resolve()
+                    resolve(true)
                 });
             })
             .catch(error => {
@@ -128,7 +136,7 @@ const updateWin32Sdk = async() => {
 
     const PATH = 'C:\\ncs\\toolchains\\v2.3.0\\bin;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin\\Scripts;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin' // 设置对应SDK的west和python等路径
 
-    let westShell = exec("cd /ncs/v2.3.0 && west update", {
+    const westShell = exec("cd /ncs/v2.3.0 && west update", {
         env: {
             PATH,
         }
@@ -143,7 +151,7 @@ const updateWin32Sdk = async() => {
         mainWindow.webContents.send('stdout-change', stdouts);
     });
 
-    westShell.stdout.on('end', function(data) {
+    westShell.stdout.on('end', function(data: any) {
         stdouts.updateSDK += "west update end";
         log.info("end", data);
         mainWindow.webContents.send('stdout-change', stdouts);
@@ -156,7 +164,7 @@ const updateMacSdk = async() => {
     const sdkWestYmlPath = "/opt/nordic/ncs/v2.3.0/nrf/west.yml";
     await downloadFile(url, sdkWestYmlPath);
     //let westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update")
-    let westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update", {
+    const westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update", {
         env: {
             PATH: "/usr/bin:/usr/local/bin:/opt/nordic/ncs/toolchains/v2.3.0/bin",
         }
@@ -171,7 +179,7 @@ const updateMacSdk = async() => {
         mainWindow.webContents.send('stdout-change', stdouts);
     });
 
-    westShell.stdout.on('end', function (data) {
+    westShell.stdout.on('end', function (data: any) {
         stdouts.updateSDK += "west update end";
         log.info("end", data);
         mainWindow.webContents.send('stdout-change', stdouts);
@@ -185,15 +193,15 @@ function updateLinuxSdk() {
 
 
 const updateVscode = async() => {
-  let url = "http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/vscode_extend_file/extension.js";
+  const url = "http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/vscode_extend_file/extension.js";
   let nordicExtensionPath;
 
-  let extensionDirPath = path.join(os.homedir(), '.vscode', 'extensions');
+  const extensionDirPath = path.join(os.homedir(), '.vscode', 'extensions');
   
   // find nordic-semiconductor.nrf-connect file
-    let files = fs.readdirSync(extensionDirPath);
+    const files = fs.readdirSync(extensionDirPath);
     for(let i = 0; i < files.length; i++) {
-        let file = files[i];
+        const file = files[i];
         if(file.indexOf("nordic-semiconductor.nrf-connect-20") != -1) {
             nordicExtensionPath = path.join(extensionDirPath, file, 'dist', 'extension.js');
             break;
