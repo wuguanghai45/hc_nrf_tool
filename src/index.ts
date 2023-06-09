@@ -144,6 +144,12 @@ function downloadFile(url: any, path: any) {
 const updateWin32Sdk = async() => {
     let url, sdkWestYmlPath;
 
+    const PATH = 'C:\\ncs\\toolchains\\v2.3.0\\bin;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin\\Scripts;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin' // 设置对应SDK的west和python等路径
+    let env = {
+        PATH,
+        PYTHONPATH: "C:\ncs\toolchains\v2.3.0\opt\bin;C:\ncs\toolchains\v2.3.0\opt\bin\Lib;C:\ncs\toolchains\v2.3.0\opt\bin\Lib\site-packages",
+    }
+
     if(states.isRmModules) {
         fs.rmSync("C:\\ncs\\v2.3.0\\modules", { recursive: true });
         fs.rmSync("C:\\ncs\\v2.3.0\\zephyr", { recursive: true });
@@ -165,19 +171,17 @@ const updateWin32Sdk = async() => {
                 fs.mkdirSync(sdkWestYmlPathDir);
             }
 
-            execSync("cd /ncs/v2.3.0 && west config manifest.path hc");
+            execSync("cd /ncs/v2.3.0 && west config manifest.path hc", {
+                env
+            });
             break
     }
 
     await downloadFile(url, sdkWestYmlPath); 
 
-    const PATH = 'C:\\ncs\\toolchains\\v2.3.0\\bin;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin\\Scripts;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin' // 设置对应SDK的west和python等路径
 
     const westShell = exec("cd /ncs/v2.3.0 && west update", {
-        env: {
-            PATH,
-            PYTHONPATH: "C:\ncs\toolchains\v2.3.0\opt\bin;C:\ncs\toolchains\v2.3.0\opt\bin\Lib;C:\ncs\toolchains\v2.3.0\opt\bin\Lib\site-packages",
-        }
+        env
     }, (error, stdout, stderr) => {
         log.info("run west shell error", error);
         log.info("run west shell stderr", stderr);
@@ -200,6 +204,10 @@ const updateWin32Sdk = async() => {
 const updateMacSdk = async() => {
     let url, sdkWestYmlPath;
 
+    let env = {
+        PATH: "/usr/bin:/usr/local/bin:/opt/nordic/ncs/toolchains/v2.3.0/bin",
+    };
+
     if(states.isRmModules) {
         fs.rmSync("/opt/nordic/ncs/v2.3.0/modules", { recursive: true });
         fs.rmSync("/opt/nordic/ncs/v2.3.0/zephyr", { recursive: true });
@@ -221,16 +229,16 @@ const updateMacSdk = async() => {
                 fs.mkdirSync(sdkWestYmlPathDir);
             }
 
-            execSync("cd /opt/nordic/ncs/v2.3.0 && west config manifest.path hc");
+            execSync("cd /opt/nordic/ncs/v2.3.0 && west config manifest.path hc", {
+                env,
+            });
             break
     }
 
     await downloadFile(url, sdkWestYmlPath);
     //let westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update")
     const westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update", {
-        env: {
-            PATH: "/usr/bin:/usr/local/bin:/opt/nordic/ncs/toolchains/v2.3.0/bin",
-        }
+        env,
     }, (error, stdout, stderr) => {
         log.info("run west shell error", error);
         log.info("run west shell stderr", stderr);
