@@ -11,6 +11,7 @@ declare global {
 contextBridge.exposeInMainWorld('electronAPI', {
     updateSdk: () => ipcRenderer.send('update-sdk'),
     updateVscode: () => ipcRenderer.send('update-vscode'),
+    setVersion: (version: string) => ipcRenderer.send('set-version', version),
     handleStdout: (callback: any) => ipcRenderer.on('stdout-change', callback),
-    // handleChangeIsNcs: (bool) => ipcRenderer.send('change-is-ncs', { bool }),
+    setIsRmModules: (isRmModules: boolean) => ipcRenderer.send('set-is-rm-modules', isRmModules),
 })
