@@ -159,7 +159,9 @@ const updateWin32Sdk = async() => {
         case Versions.NCS320:
             url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/west.yml';
             sdkWestYmlPath = "C:\\ncs\\v2.3.0\\nrf\\west.yml";
-            execSync("cd /ncs/v2.3.0 && west config manifest.path nrf");
+            execSync("cd /ncs/v2.3.0 && west config manifest.path nrf", {
+                env,
+            });
             break;
         case Versions.ZEPHYR330:
             url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/zephyr3.3-west.yml'
@@ -217,7 +219,9 @@ const updateMacSdk = async() => {
         case Versions.NCS320:
             url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/ncs3.2-west.yml'
             sdkWestYmlPath = "/opt/nordic/ncs/v2.3.0/nrf/west.yml";
-            execSync("cd /opt/nordic/ncs/v2.3.0 && west config manifest.path nrf");
+            execSync("cd /opt/nordic/ncs/v2.3.0 && west config manifest.path nrf", {
+                env,
+            });
             break;
         case Versions.ZEPHYR330:
             url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/zephyr3.3-west.yml'
