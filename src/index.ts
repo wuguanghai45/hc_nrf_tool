@@ -142,12 +142,31 @@ function downloadFile(url: any, path: any) {
 }
 
 const updateWin32Sdk = async() => {
-    const url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/west.yml';
-    const sdkWestYmlPath = "C:\\ncs\\v2.3.0\\nrf\\west.yml";
-
+    let url, sdkWestYmlPath;
 
     if(states.isRmModules) {
-        fs.rmdirSync("C:\\ncs\\v2.3.0\\modules", { recursive: true });
+        fs.rmSync("C:\\ncs\\v2.3.0\\modules", { recursive: true });
+        fs.rmSync("C:\\ncs\\v2.3.0\\zephyr", { recursive: true });
+    }
+
+    switch(states.version) {
+        case Versions.NCS320:
+            url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/west.yml';
+            sdkWestYmlPath = "C:\\ncs\\v2.3.0\\nrf\\west.yml";
+            execSync("cd /ncs/v2.3.0 && west config manifest.path nrf");
+            break;
+        case Versions.ZEPHYR330:
+            url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/zephyr3.3-west.yml'
+            const sdkWestYmlPathDir = "C:\\ncs\\v2.3.0\\hc";
+            sdkWestYmlPath = `${sdkWestYmlPathDir}\\west.yml`;
+
+            // 检查文件夹是否存在
+            if (!fs.existsSync(sdkWestYmlPathDir)) {
+                fs.mkdirSync(sdkWestYmlPathDir);
+            }
+
+            execSync("cd /ncs/v2.3.0 && west config manifest.path hc");
+            break
     }
 
     await downloadFile(url, sdkWestYmlPath); 
