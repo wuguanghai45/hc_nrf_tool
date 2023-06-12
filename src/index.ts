@@ -30,6 +30,13 @@ const states = {
     isUpdateVscode: false,
     version: Versions.NCS320,
     isRmModules: false,
+    ncsVersion: "v2.3.0",
+}
+
+const rmDir = (dir: string) => {
+    if (fs.existsSync(dir)) {
+        fs.rmSync(dir, { recursive: true })
+    }
 }
 
 const stdouts = {
@@ -144,28 +151,28 @@ function downloadFile(url: any, path: any) {
 const updateWin32Sdk = async() => {
     let url, sdkWestYmlPath;
 
-    const PATH = 'C:\\ncs\\toolchains\\v2.3.0\\bin;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin\\Scripts;C:\\ncs\\toolchains\\v2.3.0\\opt\\bin' // 设置对应SDK的west和python等路径
+    const PATH = `C:\\ncs\\toolchains\\${states.ncsVersion}\\bin;C:\\ncs\\toolchains\\${states.ncsVersion}\\opt\\bin\\Scripts;C:\\ncs\\toolchains\\${states.ncsVersion}\\opt\\bin` // 设置对应SDK的west和python等路径
     let env = {
         PATH,
-        PYTHONPATH: "C:\ncs\toolchains\v2.3.0\opt\bin;C:\ncs\toolchains\v2.3.0\opt\bin\Lib;C:\ncs\toolchains\v2.3.0\opt\bin\Lib\site-packages",
+        PYTHONPATH: `C:\ncs\toolchains\${states.ncsVersion}\opt\bin;C:\ncs\toolchains\${states.ncsVersion}\opt\bin\Lib;C:\ncs\toolchains\${states.ncsVersion}\opt\bin\Lib\site-packages`,
     }
 
     if(states.isRmModules) {
-        fs.rmSync("C:\\ncs\\v2.3.0\\modules", { recursive: true });
-        fs.rmSync("C:\\ncs\\v2.3.0\\zephyr", { recursive: true });
+        rmDir(`C:\\ncs\\${states.ncsVersion}\\modules`);
+        rmDir(`C:\\ncs\\${states.ncsVersion}\\zephyr`);
     }
 
     switch(states.version) {
         case Versions.NCS320:
             url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/west.yml';
-            sdkWestYmlPath = "C:\\ncs\\v2.3.0\\nrf\\west.yml";
-            execSync("cd /ncs/v2.3.0 && west config manifest.path nrf", {
+            sdkWestYmlPath = `C:\\ncs\\${states.ncsVersion}\\nrf\\west.yml`;
+            execSync(`cd /ncs/${states.ncsVersion} && west config manifest.path nrf`, {
                 env,
             });
             break;
         case Versions.ZEPHYR330:
             url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/zephyr3.3-west.yml'
-            const sdkWestYmlPathDir = "C:\\ncs\\v2.3.0\\hc";
+            const sdkWestYmlPathDir = `C:\\ncs\\${states.ncsVersion}\\hc`;
             sdkWestYmlPath = `${sdkWestYmlPathDir}\\west.yml`;
 
             // 检查文件夹是否存在
@@ -173,7 +180,7 @@ const updateWin32Sdk = async() => {
                 fs.mkdirSync(sdkWestYmlPathDir);
             }
 
-            execSync("cd /ncs/v2.3.0 && west config manifest.path hc", {
+            execSync(`cd /ncs/${states.ncsVersion} && west config manifest.path hc`, {
                 env
             });
             break
@@ -182,7 +189,7 @@ const updateWin32Sdk = async() => {
     await downloadFile(url, sdkWestYmlPath); 
 
 
-    const westShell = exec("cd /ncs/v2.3.0 && west update", {
+    const westShell = exec(`cd /ncs/${states.ncsVersion} && west update`, {
         env
     }, (error, stdout, stderr) => {
         log.info("run west shell error", error);
@@ -207,25 +214,25 @@ const updateMacSdk = async() => {
     let url, sdkWestYmlPath;
 
     let env = {
-        PATH: "/usr/bin:/usr/local/bin:/opt/nordic/ncs/toolchains/v2.3.0/bin",
+        PATH: `/usr/bin:/usr/local/bin:/opt/nordic/ncs/toolchains/${states.ncsVersion}/bin`,
     };
 
     if(states.isRmModules) {
-        fs.rmSync("/opt/nordic/ncs/v2.3.0/modules", { recursive: true });
-        fs.rmSync("/opt/nordic/ncs/v2.3.0/zephyr", { recursive: true });
+        rmDir(`/opt/nordic/ncs/${states.ncsVersion}/modules`);
+        rmDir(`/opt/nordic/ncs/${states.ncsVersion}/zephyr`);
     }
     
     switch(states.version) {
         case Versions.NCS320:
             url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/ncs3.2-west.yml'
-            sdkWestYmlPath = "/opt/nordic/ncs/v2.3.0/nrf/west.yml";
-            execSync("cd /opt/nordic/ncs/v2.3.0 && west config manifest.path nrf", {
+            sdkWestYmlPath = `/opt/nordic/ncs/${states.ncsVersion}/nrf/west.yml`;
+            execSync(`cd /opt/nordic/ncs/${states.ncsVersion} && west config manifest.path nrf`, {
                 env,
             });
             break;
         case Versions.ZEPHYR330:
             url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/zephyr3.3-west.yml'
-            const sdkWestYmlPathDir = "/opt/nordic/ncs/v2.3.0/hc/";
+            const sdkWestYmlPathDir = `/opt/nordic/ncs/${states.ncsVersion}/hc/`;
             sdkWestYmlPath = `${sdkWestYmlPathDir}/west.yml`;
 
             // 检查文件夹是否存在
@@ -233,15 +240,14 @@ const updateMacSdk = async() => {
                 fs.mkdirSync(sdkWestYmlPathDir);
             }
 
-            execSync("cd /opt/nordic/ncs/v2.3.0 && west config manifest.path hc", {
+            execSync(`cd /opt/nordic/ncs/${states.ncsVersion} && west config manifest.path hc`, {
                 env,
             });
             break
     }
 
     await downloadFile(url, sdkWestYmlPath);
-    //let westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update")
-    const westShell = exec("cd /opt/nordic/ncs/v2.3.0 && west update", {
+    const westShell = exec(`cd /opt/nordic/ncs/${states.ncsVersion} && west update`, {
         env,
     }, (error, stdout, stderr) => {
         log.info("run west shell error", error);
