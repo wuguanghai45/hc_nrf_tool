@@ -9,7 +9,10 @@ import { mainConfig } from './webpack.main.config';
 import { rendererConfig } from './webpack.renderer.config';
 
 const config: ForgeConfig = {
-  packagerConfig: {},
+  packagerConfig: {
+    name: "hc_zephyr_tool",
+    icon: "./images/icon",
+  },
   rebuildConfig: {},
   makers: [new MakerZIP({}, ['darwin', "win32", "linux"])],
   plugins: [

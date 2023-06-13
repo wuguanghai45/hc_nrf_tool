@@ -17,7 +17,7 @@ log.info("current_version", appVersion);
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-const iconPath = "images/icon.png";
+// const iconPath = "images/icon.png";
 
 
 // app.setIcon(iconPath);
@@ -52,7 +52,7 @@ function createWindow () {
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
-    icon: iconPath,
+    // icon: iconPath,
     title: "HC TOOL",
   });
 
@@ -93,7 +93,7 @@ function createWindow () {
 
 app.whenReady().then(() => {
     if (process.platform === 'darwin') {
-        app.dock.setIcon(iconPath)
+        // app.dock.setIcon(iconPath)
     }
 
     createWindow();
@@ -102,7 +102,7 @@ app.whenReady().then(() => {
         applicationName: 'HC TOOL',
         applicationVersion: packageJson.version,
         version: packageJson.version,
-        iconPath: iconPath,
+        // iconPath: iconPath,
     });
 })
 
