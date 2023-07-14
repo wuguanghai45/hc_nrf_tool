@@ -49,6 +49,11 @@ const Home: FC = () => {
         <hr />
       </Col>
 
+      <Col span={24} style={{ textAlign: "center" }}>
+        <h4 style={{color: "red"}}>需要连接公司内网环境使用</h4>
+        <hr />
+      </Col>
+
       <Col span={24}  style={{ textAlign: "center" }}>
         <Row>
           <Col span={12}>
@@ -61,7 +66,9 @@ const Home: FC = () => {
               onChange={onVersionChange}
               options={[
                 { value: Versions.NCS320, label: 'ncs-v3.2.0' },
+                { value: Versions.ZEPHYR340, label: '官方3.4.0' },
                 { value: Versions.ZEPHYR330, label: '官方3.3.0' },
+                { value: Versions.ZEPHYR310, label: '官方3.1.0' },
               ]}
             />
           </Col>
@@ -71,7 +78,6 @@ const Home: FC = () => {
         <Row>
           <Col span={12}>
             是否删除modules文件
-            更改版本后需要选是
           </Col>
 
           <Col span={12}>
