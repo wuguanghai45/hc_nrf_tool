@@ -158,8 +158,9 @@ const updateWin32Sdk = async() => {
     }
 
     if(states.isRmModules) {
-        rmDir(`C:\\ncs\\${states.ncsVersion}\\modules`);
-        rmDir(`C:\\ncs\\${states.ncsVersion}\\zephyr`);
+        log.info("rm dir");
+        execSync(`rm -rf /ncs/${states.ncsVersion}/modules`);
+        execSync(`rm -rf /ncs/${states.ncsVersion}/zephyr`);
     }
 
     switch(states.version) {
@@ -218,9 +219,13 @@ const updateMacSdk = async() => {
     };
 
     if(states.isRmModules) {
-        rmDir(`/opt/nordic/ncs/${states.ncsVersion}/modules`);
-        rmDir(`/opt/nordic/ncs/${states.ncsVersion}/zephyr`);
+        log.info("rm dir");
+        const modulesPath = `/opt/nordic/ncs/${states.ncsVersion}/nrf/modules`;
+        const zephyrPath = `/opt/nordic/ncs/${states.ncsVersion}/nrf/zephyr`;
+        execSync(`rm -rf ${modulesPath}`);
+        execSync(`rm -rf ${zephyrPath}`);
     }
+
     
     switch(states.version) {
         case Versions.NCS320:
