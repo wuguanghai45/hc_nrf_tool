@@ -172,7 +172,7 @@ const updateWin32Sdk = async() => {
             break;
         default:
             url = `http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/${states.version}-west.yml`;
-            const sdkWestYmlPathDir = `/opt/nordic/ncs/${states.ncsVersion}/hc/`;
+            const sdkWestYmlPathDir = `C:\\ncs\\${states.ncsVersion}\\hc`;
             sdkWestYmlPath = `${sdkWestYmlPathDir}/west.yml`;
 
             // 检查文件夹是否存在
