@@ -165,14 +165,14 @@ const updateWin32Sdk = async() => {
 
     switch(states.version) {
         case Versions.NCS320:
-            url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/west.yml';
+            url = 'http://10.0.2.136/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/west.yml';
             sdkWestYmlPath = `C:\\ncs\\${states.ncsVersion}\\nrf\\west.yml`;
             execSync(`cd /ncs/${states.ncsVersion} && west config manifest.path nrf`, {
                 env,
             });
             break;
         default:
-            url = `http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/${states.version}-west.yml`;
+            url = `http://10.0.2.136/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/${states.version}-west.yml`;
             const sdkWestYmlPathDir = `C:\\ncs\\${states.ncsVersion}\\hc`;
             sdkWestYmlPath = `${sdkWestYmlPathDir}/west.yml`;
 
@@ -229,14 +229,14 @@ const updateMacSdk = async() => {
     
     switch(states.version) {
         case Versions.NCS320:
-            url = 'http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/ncs3.2-west.yml'
+            url = 'http://10.0.2.136/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/ncs3.2-west.yml'
             sdkWestYmlPath = `/opt/nordic/ncs/${states.ncsVersion}/nrf/west.yml`;
             execSync(`cd /opt/nordic/ncs/${states.ncsVersion} && west config manifest.path nrf`, {
                 env,
             });
             break;
         default:
-            url = `http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/${states.version}-west.yml`;
+            url = `http://10.0.2.136/hc_zephyr/hc_tool_statics/-/raw/main/ncs_extend_file/${states.version}-west.yml`;
             const sdkWestYmlPathDir = `/opt/nordic/ncs/${states.ncsVersion}/hc/`;
             sdkWestYmlPath = `${sdkWestYmlPathDir}/west.yml`;
 
@@ -279,7 +279,7 @@ function updateLinuxSdk() {
 
 
 const updateVscode = async() => {
-  const url = "http://10.1.20.100/hc_zephyr/hc_tool_statics/-/raw/main/vscode_extend_file/extension.js";
+  const url = "http://10.0.2.136/hc_zephyr/hc_tool_statics/-/raw/main/vscode_extend_file/extension.js";
   let nordicExtensionPath;
 
   const extensionDirPath = path.join(os.homedir(), '.vscode', 'extensions');
