@@ -159,8 +159,8 @@ const updateWin32Sdk = async() => {
 
     if(states.isRmModules) {
         log.info("rm dir");
-        execSync(`rm -rf /ncs/${states.ncsVersion}/modules`);
-        execSync(`rm -rf /ncs/${states.ncsVersion}/zephyr`);
+        execSync(`rm -r /ncs/${states.ncsVersion}/modules`);
+        execSync(`rm -r /ncs/${states.ncsVersion}/zephyr`);
     }
 
     switch(states.version) {
