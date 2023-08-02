@@ -220,8 +220,8 @@ const updateMacSdk = async() => {
 
     if(states.isRmModules) {
         log.info("rm dir");
-        const modulesPath = `/opt/nordic/ncs/${states.ncsVersion}/nrf/modules`;
-        const zephyrPath = `/opt/nordic/ncs/${states.ncsVersion}/nrf/zephyr`;
+        const modulesPath = `/opt/nordic/ncs/${states.ncsVersion}/modules`;
+        const zephyrPath = `/opt/nordic/ncs/${states.ncsVersion}/zephyr`;
         execSync(`rm -rf ${modulesPath}`);
         execSync(`rm -rf ${zephyrPath}`);
     }
