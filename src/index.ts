@@ -24,6 +24,19 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 app.setName("HC TOOL");
 
+function deleteFolderRecursive(path: string) {
+    if (fs.existsSync(path)) {
+        fs.readdirSync(path).forEach((file) => {
+            const curPath = `${path}/${file}`;
+            if (fs.lstatSync(curPath).isDirectory()) {
+                deleteFolderRecursive(curPath);
+            } else {
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+}
 
 const states = {
     isSDKupdateing: false,
@@ -230,8 +243,8 @@ const updateWin32Sdk = async () => {
 
     if (states.isRmModules) {
         log.info("rm dir");
-        execSync(`rm -r /ncs/${states.ncsVersion}/modules`);
-        execSync(`rm -r /ncs/${states.ncsVersion}/zephyr`);
+        deleteFolderRecursive(`/ncs/${states.ncsVersion}/modules`);
+        deleteFolderRecursive(`/ncs/${states.ncsVersion}/zephyr`);
     }
 
     switch (states.version) {
