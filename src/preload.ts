@@ -14,4 +14,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     setVersion: (version: string) => ipcRenderer.send('set-version', version),
     handleStdout: (callback: any) => ipcRenderer.on('stdout-change', callback),
     setIsRmModules: (isRmModules: boolean) => ipcRenderer.send('set-is-rm-modules', isRmModules),
+    handleSDKVersionsChange: (callback: any) => ipcRenderer.on('ncs_sdk_versions_change', callback),
+    handleCurrentSDKVersionChange: (callback: any) => ipcRenderer.on('ncs_current_sdk_version_change', callback),
+    setSDKVersion: (version: string) => ipcRenderer.send('set-ncs-sdk-version', version),
 })

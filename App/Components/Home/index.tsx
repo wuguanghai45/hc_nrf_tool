@@ -21,15 +21,30 @@ const Home: FC = () => {
   const [vscodeStdout, setVscodeStdout] = useState<string>('');
   const [version, setVersion] = useState<string>(Versions.NCS320);
   const [isRmModules, setIsRmModules] = useState<boolean>(false);
+  const [sdkVersions, setSdkVersions] = useState<string[]>([]);
+  const [currentSDKVersion, setCurrentSDKVersion] = useState<string>('');
 
   window.electronAPI.handleStdout((event: any, value: any) => {
     setSdkStdout(value.updateSDK);
     setVscodeStdout(value.updateVscode);
   });
 
+  window.electronAPI.handleSDKVersionsChange((event: any, value: any) => {
+    setSdkVersions(value);
+  });
+
+  window.electronAPI.handleCurrentSDKVersionChange((event: any, value: any) => {
+    setCurrentSDKVersion(value);
+  });
+
   const onVersionChange = (value: string) => {
     window.electronAPI.setVersion(value);
     setVersion(value);
+  };
+
+  const onSDKVersionChange = (value: string) => {
+    window.electronAPI.setSDKVersion(value);
+    setCurrentSDKVersion(value);
   };
 
   const onModulesChange = ({ target: { value } }: RadioChangeEvent) => {
@@ -52,6 +67,27 @@ const Home: FC = () => {
       <Col span={24} style={{ textAlign: "center" }}>
         <h4 style={{color: "red"}}>需要连接公司内网环境使用</h4>
         <hr />
+      </Col>
+
+      <Col span={24} style={{ textAlign: "center" }}>
+        <h3>当前SDK版本: {currentSDKVersion}</h3>
+        <hr />
+      </Col>
+
+      <Col span={24} style={{ textAlign: "center" }}>
+        <Row>
+          <Col span={12}>
+            SDK版本
+          </Col>
+          <Col span={12}>
+            <Select
+              value={currentSDKVersion}
+              style={{ width: 200 }}
+              onChange={onSDKVersionChange}
+              options={[ ...sdkVersions.map((item) => ({ value: item, label: item }))]}
+            />
+          </Col>
+        </Row>
       </Col>
 
       <Col span={24}  style={{ textAlign: "center" }}>
