@@ -102,6 +102,7 @@ const Home: FC = () => {
               onChange={onVersionChange}
               options={[
                 { value: Versions.NCS320, label: 'ncs-v3.2.0' },
+                { value: Versions.ZEPHYR350, label: '官方3.5.0' },
                 { value: Versions.ZEPHYR340, label: '官方3.4.0' },
                 { value: Versions.ZEPHYR330, label: '官方3.3.0' },
                 { value: Versions.ZEPHYR310, label: '官方3.1.0' },
